@@ -1,35 +1,81 @@
 import React, { useState } from 'react'
 import Styled, { styled } from 'styled-components'
+import db from '../firebase/firebaseConfig'
+import { doc, updateDoc, deleteDoc } from 'firebase/firestore'
 
 export const Contactos = ({ id, nombre, correo }) => {
 
   const [editantoTarea, cambiarEditandoTarea] = useState(false)
+  const [nuevoNombre, cambiarNuevoNombre] = useState(nombre)  
+  const [nuevoCorreo, cambiarNuevoCorreo] = useState(correo)
+
+const actualizarContacto = async (e) => {
+
+  e.preventDefault()
+  try {
+    await updateDoc(doc(db, 'usuario', id), {
+      nombre: nuevoNombre,
+      correo: nuevoCorreo
+})
+  } catch (error) {
+    console.log(error)
+  }
+
+
+  cambiarEditandoTarea(false)
+}
+
+
+const eliminarContacto = async (id) => {
+
+  try {
+    await deleteDoc(doc(db, 'usuario', id), {
+      nombre: nuevoNombre,
+      correo: nuevoCorreo
+})
+  } catch (error) {
+    console.log(error)
+  }
+
+
+  cambiarEditandoTarea(false)
+}
   return (
     <div>
       <ContenedorContacto>
         {editantoTarea ?
-          <form action=""> 
+          <form action="" onSubmit={actualizarContacto}> 
           <Input
             type=' text'
             name='nombre'
-            placeholder='Nombre'>
+            placeholder='Nombre'
+            value={nuevoNombre}
+            
+            onChange={(e)=> cambiarNuevoNombre(e.target.value)
+            }>
 
           </Input>
           <Input
             type=' text'
             name='nombre'
-            placeholder='Nombre'>
+            placeholder='Nombre'
+            value={nuevoCorreo}
+            onChange={(e)=> cambiarNuevoCorreo(e.target.value)}
+
+            >
 
           </Input>
           <Boton type='submit'>Actualizar</Boton>
           </form>
           : <Nombre>{nombre}</Nombre>}
           <Correo>{correo}</Correo>
-          <Boton onClick={()=> cambiarEditandoTarea()}>Editar</Boton>
+          <Boton onClick={()=> cambiarEditandoTarea(!editantoTarea)}>Editar</Boton>
+          <Boton onClick={()=> eliminarContacto(id)}>Eliminar</Boton>
           </ContenedorContacto> 
       </div>
   )
 }
+
 const ContenedorContacto = styled.div`
 padding: 10px;
 border-bottom: 1px solid #E1E1E1;`
