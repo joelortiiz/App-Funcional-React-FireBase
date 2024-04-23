@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Formulario } from './components/Formulario';
-
+import { ListaContactos } from './components/ListaContactos';
 
  const App = () => {
   return (
@@ -11,6 +11,7 @@ import { Formulario } from './components/Formulario';
 Lista de contactos
     </Titulo>
     <Formulario/>
+    <ListaContactos/>
 </Contenedor>
     </>
   )
